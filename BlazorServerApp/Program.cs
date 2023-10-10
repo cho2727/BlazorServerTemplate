@@ -1,4 +1,6 @@
 using BlazorServerApp.Data;
+using BlazorServerApp.Helper;
+using BlazorServerApp.Injectables;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Serilog;
@@ -24,7 +26,20 @@ try
     // Add services to the container.
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
-    builder.Services.AddSingleton<WeatherForecastService>();
+    //builder.Services.AddSingleton<WeatherForecastService>();
+
+    builder.Services.Scan(scan => scan
+                            .FromAssemblies(AssemblyHelper.GetAllAssemblies())
+                            .AddClasses(classes => classes.AssignableTo<ITransientService>())
+                            .AsImplementedInterfaces()
+                            .WithTransientLifetime()
+                            .AddClasses(classes => classes.AssignableTo<IScopedService>())
+                            .AsImplementedInterfaces()
+                            .WithScopedLifetime()
+                            .AddClasses(classes => classes.AssignableTo<ISingletonService>())
+                            .AsImplementedInterfaces()
+                            .WithSingletonLifetime()
+                            );
 
     var app = builder.Build();
 

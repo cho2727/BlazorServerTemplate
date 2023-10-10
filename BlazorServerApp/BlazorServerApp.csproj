@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="scrutor" Version="4.2.2" />
     <PackageReference Include="serilog.aspnetcore" Version="7.0.0" />
     <PackageReference Include="serilog.expressions" Version="3.4.1" />
     <PackageReference Include="serilog.sinks.seq" Version="5.2.3" />
