@@ -1,6 +1,7 @@
 using BlazorServerApp.Data;
 using BlazorServerApp.Helper;
 using BlazorServerApp.Injectables;
+using MediatR;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Serilog;
@@ -28,6 +29,7 @@ try
     builder.Services.AddServerSideBlazor();
     //builder.Services.AddSingleton<WeatherForecastService>();
 
+    builder.Services.AddMediatR(AssemblyHelper.GetAllAssemblies().ToArray());
     builder.Services.Scan(scan => scan
                             .FromAssemblies(AssemblyHelper.GetAllAssemblies())
                             .AddClasses(classes => classes.AssignableTo<ITransientService>())
