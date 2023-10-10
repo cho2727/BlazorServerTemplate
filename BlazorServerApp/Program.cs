@@ -1,10 +1,7 @@
-using BlazorServerApp.Behaviors;
-using BlazorServerApp.Data;
+using BlazorServerApp.Extensions;
 using BlazorServerApp.Helper;
 using BlazorServerApp.Injectables;
 using MediatR;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Serilog;
 
 var configuration = new ConfigurationBuilder()
@@ -20,30 +17,13 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    builder.Host.UseSerilog(
-        (content, configuration) => configuration
-                                    .ReadFrom
-                                    .Configuration(content.Configuration));
+    builder.Host.AddSerilog();
 
     // Add services to the container.
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
-    //builder.Services.AddSingleton<WeatherForecastService>();
-    //builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MediatRLoggingBehavior<,>));
-
-    builder.Services.AddMediatR(AssemblyHelper.GetAllAssemblies().ToArray());
-    builder.Services.Scan(scan => scan
-                            .FromAssemblies(AssemblyHelper.GetAllAssemblies())
-                            .AddClasses(classes => classes.AssignableTo<ITransientService>())
-                            .AsImplementedInterfaces()
-                            .WithTransientLifetime()
-                            .AddClasses(classes => classes.AssignableTo<IScopedService>())
-                            .AsImplementedInterfaces()
-                            .WithScopedLifetime()
-                            .AddClasses(classes => classes.AssignableTo<ISingletonService>())
-                            .AsImplementedInterfaces()
-                            .WithSingletonLifetime()
-                            );
+    builder.Services.InitMediatR();
+    builder.Services.InitScrutor();
 
     var app = builder.Build();
 
@@ -72,4 +52,8 @@ catch (Exception ex)
     string type = ex.GetType().Name;
     if (type.Equals("StopTheHostException", StringComparison.OrdinalIgnoreCase)) throw;
     Log.Fatal(ex, "Host terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
 }
