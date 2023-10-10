@@ -1,3 +1,4 @@
+using BlazorServerApp.Behaviors;
 using BlazorServerApp.Data;
 using BlazorServerApp.Helper;
 using BlazorServerApp.Injectables;
@@ -28,6 +29,7 @@ try
     builder.Services.AddRazorPages();
     builder.Services.AddServerSideBlazor();
     //builder.Services.AddSingleton<WeatherForecastService>();
+    //builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(MediatRLoggingBehavior<,>));
 
     builder.Services.AddMediatR(AssemblyHelper.GetAllAssemblies().ToArray());
     builder.Services.Scan(scan => scan

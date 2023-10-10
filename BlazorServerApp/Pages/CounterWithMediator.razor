@@ -1,6 +1,8 @@
-﻿@page "/counter"
+﻿@page "/counter/mediator"
+@using BlazorServerApp.Logger;
 @using MediatR;
 @inject ILogger<Counter> logger
+@inject IApiLogger apiLogger
 @inject IMediator mediator
 
 <PageTitle>Counter</PageTitle>
@@ -23,6 +25,7 @@
         });
 
         currentCount = response.CurrentValue;
-        logger.LogInformation($"currentCount = {currentCount}");
+        //logger.LogInformation($"currentCount = {currentCount}");
+        //apiLogger.LogInformation($"currentCount = {currentCount}");
     }
 }
